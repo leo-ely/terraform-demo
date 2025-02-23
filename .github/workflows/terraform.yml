@@ -8,7 +8,6 @@ permissions:
   contents: read
 
 env:
-  GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
   TF_VAR_region: ${{ vars.GCP_REGION }}
   TF_VAR_project: ${{ vars.GCP_BUCKET_ID }}
   TF_VAR_data-project: ${{ vars.GCP_PROJECT_ID }}
@@ -26,6 +25,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: GCP Authentication
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}'
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
