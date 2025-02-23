@@ -1,0 +1,42 @@
+name: 'Terraform GCP deployment'
+
+on:
+  push:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+env:
+  GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+
+jobs:
+  terraform:
+    name: 'Terraform'
+    runs-on: ubuntu-latest
+    environment: production
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./terraform
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+    - name: Setup Terraform variables
+      run: |-
+        cat > pipeline.auto.tfvars <<EOF
+        region="${{ vars.GCP_REGION }}"
+        project="${{ vars.GCP_BUCKET_ID }}"
+        data-project="${{ vars.GCP_PROJECT_ID }}"
+        EOF
+
+    - name: Terraform Init
+      run: terraform init
+    - name: Terraform Plan
+      run: terraform plan -input=false
+    - name: Terraform Apply
+      run: terraform apply -auto-approve -input=false
