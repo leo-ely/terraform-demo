@@ -21,7 +21,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: ./terraform
+        working-directory: ./.terraform
 
     steps:
       - name: Checkout repository
