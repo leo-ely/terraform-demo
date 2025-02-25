@@ -37,7 +37,7 @@ Some variables used on Terraform files are configured directly on GitHub Actions
 To set environment variables on Terraform, they must have the **_TF_VAR__** prefix (e.g.: _TF_VAR_variable-name_)
 
 For backend environment variables file configuration, the file has the recommended naming pattern:
-_config.<provider-name>.tfbackend_
+_config.**\<provider-name\>**.tfbackend_
 
 Terraform connects to GCP using the JSON credentials, added through the _GOOGLE_CREDENTIALS_ environment variable.
 
