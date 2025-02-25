@@ -11,7 +11,6 @@ env:
   GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
   TF_VAR_project-id: ${{ vars.GCP_PROJECT_ID }}
   TF_VAR_region: ${{ vars.GCP_REGION }}
-  TF_VAR_tf-state-bucket-id: ${{ vars.GCP_TF_STATE_BUCKET_ID }}
 
 jobs:
   terraform:
@@ -28,9 +27,13 @@ jobs:
         uses: actions/checkout@v4
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
+      - name: Create Backend configuration
+        run: |
+          echo 'bucket = ${{ vars.GCP_TF_STATE_BUCKET_ID }}' >> config.gcs.tfbackend
+          echo 'prefix = \"terraform/state\"' >> config.gcs.tfbackend
 
       - name: Terraform Init
-        run: terraform init
+        run: terraform init -backend-config=config.gcs.tfbackend
       - name: Terraform Plan
         run: terraform plan -input=false
       - name: Terraform Apply
