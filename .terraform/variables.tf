@@ -1,20 +1,15 @@
-locals {
-  labels = {
-    "data-project" = var.data-project
-  }
-}
-
-variable "project" {
+variable "project-id" {
   type        = string
   description = "GCP Project ID"
 }
 
 variable "region" {
-  type    = string
-  default = "GCP Bucket Region"
+  type        = string
+  description = "GCP Bucket Region"
+  default     = "us-east1"
 }
 
-variable "data-project" {
+variable "tf-state-bucket-id" {
   type        = string
-  description = "Data pipeline project name (to use as resource prefix)"
+  description = "GCP Bucket for Terraform state"
 }
