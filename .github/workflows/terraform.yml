@@ -30,7 +30,7 @@ jobs:
       - name: Create Backend configuration
         run: |
           echo 'bucket = ${{ vars.GCP_TF_STATE_BUCKET_ID }}' >> config.gcs.tfbackend
-          echo 'prefix = \"terraform/state\"' >> config.gcs.tfbackend
+          echo 'prefix = "terraform/state"' >> config.gcs.tfbackend
 
       - name: Terraform Init
         run: terraform init -backend-config=config.gcs.tfbackend
