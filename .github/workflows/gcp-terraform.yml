@@ -15,7 +15,6 @@ env:
 
 jobs:
   terraform-plan:
-    id: terraform-plan
     name: 'Terraform Plan'
     runs-on: ubuntu-latest
     environment: gcp-production
@@ -51,7 +50,6 @@ jobs:
           path: './tfplan'
 
   terraform-apply:
-    id: terraform-apply
     name: 'Terraform Apply'
     needs: [ terraform-plan ]
     if: github.event_name == 'workflow_dispatch'
