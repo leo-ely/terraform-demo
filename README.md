@@ -1,13 +1,29 @@
-# Terraform GCP Demo
+# Terraform Demo
 
-This repository acts as a demo for GitOps integration between Terraform and GCP, using Actions for CI/CD pipelines.
+This repository acts as a demo for GitOps integration between Terraform and cloud providers, using Actions for
+CI/CD pipelines.
 
 Integration runs with every merged pull request in the default branch, and it can be configured for different
 environments by creating specific branches.
 
-### Steps:
+### Steps for AWS:
 
-* Create a new project in GCP
+* TODO
+
+### Steps for Azure:
+
+* Create Managed Identity in Azure Portal
+    * Services > Managed Identities > Add
+* Add role to created identity in Azure Portal
+    * Services > Managed Identities > your identity > Access Control (IAM) > Add > Role assignment
+    * Used Contributor role for demo purposes
+* Copy ID info to GitHub Actions variables (Client ID, Subscription ID, Tenant ID and Object ID)
+
+Then, the repository needs to have the GitHub Actions workflow configured alongside the Terraform files.
+
+### Steps for GCP:
+
+* Create a new project
 * Add Cloud Billing and Management in APIs
 * Create a service account in IAM (Editor permissions used for demo purposes)
     * Make sure that the account has proper billing permissions
@@ -16,7 +32,7 @@ environments by creating specific branches.
 * Configure the JSON credentials downloaded in Actions' Secrets
     * File content must not have line breaks in Secrets
 
-Then, the repository needs to have the GitHub Actions workflows configured alongside the Terraform files.
+Then, the repository needs to have the GitHub Actions workflow configured alongside the Terraform files.
 
 ---
 
@@ -26,11 +42,11 @@ All Terraform files are hosted in the **_.terraform_** folder, for easy manageme
 
 Files are set as follows:
 
-* _bucket.tf_ - declares the configuration for a bucket in Cloud Storage
 * _providers.tf_ - declares the cloud provider, and the backend
     * backend configurations are set inside the Actions workflow
-* _variables.tf_ - declares environment variables to be used in other configuration files
+* _variables.tf_ - declares environment variables to be used in other files
     * those variables cannot be used within backend configurations
+* Other files are declared on-demand, since Terraform processes all files within a directory
 
 Some variables used on Terraform files are configured directly on GitHub Actions, for easy management.
 
@@ -39,9 +55,13 @@ To set environment variables on Terraform, they must have the **_TF_VAR__** pref
 For backend environment variables file configuration, the file has the recommended naming pattern:
 _config.**\<provider-name\>**.tfbackend_
 
-Terraform connects to GCP using the JSON credentials, added through the _GOOGLE_CREDENTIALS_ environment variable.
+For GCP, Terraform connects using the JSON credentials, added through the _GOOGLE_CREDENTIALS_ environment variable.
+
+For Azure, Terraform connects , using Azure credentials hosted in Actions' Secrets.
 
 ---
 
-Refer to [Terraform Docs](https://developer.hashicorp.com/terraform/docs) on how to create different resources, and
-more.
+[Terraform Docs](https://developer.hashicorp.com/terraform/docs) > how to create different resources, and more.
+
+[Azure Login with OIDC](https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure-openid-connect) >
+how to connect GitHub Actions to Azure (option 2).
