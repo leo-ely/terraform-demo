@@ -35,10 +35,10 @@ jobs:
         uses: hashicorp/setup-terraform@v3
       - name: Create Backend configuration
         run: |
-          echo 'container_name = "${{ vars.AZURE_TF_STATE_CONTAINER_NAME }}"' >> configure.azurerm.tfbackend
-          echo 'key = "terraform.tfstate"' >> configure.azurerm.tfbackend
+          echo 'container_name = "${{ vars.AZURE_TF_STATE_CONTAINER_NAME }}"' >> config.azurerm.tfbackend
+          echo 'key = "terraform.tfstate"' >> config.azurerm.tfbackend
           echo 'resource_group_name = "${{ vars.AZURE_TF_STATE_RG_NAME }}"' >> config.azurerm.tfbackend
-          echo 'storage_account_name = "${{ vars.AZURE_TF_STATE_SA_NAME }}"' >> configure.azurerm.tfbackend
+          echo 'storage_account_name = "${{ vars.AZURE_TF_STATE_SA_NAME }}"' >> config.azurerm.tfbackend
           echo 'use_oidc = true' >> config.azurerm.tfbackend
 
       - name: Terraform Init
@@ -75,10 +75,10 @@ jobs:
         uses: hashicorp/setup-terraform@v3
       - name: Create Backend configuration
         run: |
-          echo 'container_name = "${{ vars.AZURE_TF_STATE_CONTAINER_NAME }}"' >> configure.azurerm.tfbackend
-          echo 'key = "terraform.tfstate"' >> configure.azurerm.tfbackend
+          echo 'container_name = "${{ vars.AZURE_TF_STATE_CONTAINER_NAME }}"' >> config.azurerm.tfbackend
+          echo 'key = "terraform.tfstate"' >> config.azurerm.tfbackend
           echo 'resource_group_name = "${{ vars.AZURE_TF_STATE_RG_NAME }}"' >> config.azurerm.tfbackend
-          echo 'storage_account_name = "${{ vars.AZURE_TF_STATE_SA_NAME }}"' >> configure.azurerm.tfbackend
+          echo 'storage_account_name = "${{ vars.AZURE_TF_STATE_SA_NAME }}"' >> config.azurerm.tfbackend
           echo 'use_oidc = true' >> config.azurerm.tfbackend
 
       - name: Terraform Init
