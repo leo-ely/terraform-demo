@@ -3,7 +3,7 @@ name: 'Terraform Azure deployment'
 on:
   push:
     branches: [ "main" ]
-  workflow-dispatch:
+  workflow_dispatch:
 
 permissions:
   contents: read
