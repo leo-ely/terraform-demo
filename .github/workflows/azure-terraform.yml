@@ -49,7 +49,7 @@ jobs:
         run: terraform validate -no-color
 
       - name: Terraform Plan
-        run: terraform plan -input=false -out tfplan
+        run: terraform plan -input=false -out ./tfplan
       - name: Upload Terraform Plan
         uses: actions/upload-artifact@v4
         with:
@@ -88,4 +88,4 @@ jobs:
         with:
           name: tfplan
       - name: Terraform Apply
-        run: terraform apply -auto-approve tfplan -input=false
+        run: terraform apply -auto-approve ./tfplan -input=false
