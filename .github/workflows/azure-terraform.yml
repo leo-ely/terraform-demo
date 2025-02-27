@@ -63,6 +63,10 @@ jobs:
     runs-on: ubuntu-latest
     environment: azure-production
     concurrency: azure-production
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./.terraform/azure
 
     steps:
       - name: Checkout repository
@@ -83,5 +87,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: tfplan
+          path: ./.terraform/gcp
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
