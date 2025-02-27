@@ -56,10 +56,6 @@ jobs:
     runs-on: ubuntu-latest
     environment: gcp-production
     concurrency: gcp-production
-    defaults:
-      run:
-        shell: bash
-        working-directory: ./.terraform/gcp
 
     steps:
       - name: Checkout repository

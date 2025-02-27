@@ -63,10 +63,6 @@ jobs:
     runs-on: ubuntu-latest
     environment: azure-production
     concurrency: azure-production
-    defaults:
-      run:
-        shell: bash
-        working-directory: ./.terraform/azure
 
     steps:
       - name: Checkout repository
