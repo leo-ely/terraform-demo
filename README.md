@@ -20,6 +20,10 @@ environments by creating specific branches.
 * Add Federated Credential to created identity in Azure Portal
     * Services > Managed Identities > your identity > Settings > Federated Credentials > Add Credential
 * Copy ID info to GitHub Actions variables (Client ID, Subscription ID, Tenant ID and Object ID)
+* Create Storage account in Azure Portal (to hold Terraform's file control state)
+    * Add created identity to Access Control (IAM)
+    * Create container for hosting Terraform's file control state
+    * Make sure that network access is properly configured in storage account
 
 Then, the repository needs to have the GitHub Actions workflow configured alongside the Terraform files.
 
