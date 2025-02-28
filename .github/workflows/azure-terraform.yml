@@ -26,8 +26,6 @@ jobs:
       run:
         shell: bash
         working-directory: ./.terraform/azure
-    env:
-      ARM_SKIP_PROVIDER_REGISTRATION: true
 
     steps:
       - name: Checkout repository
