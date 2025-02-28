@@ -14,6 +14,7 @@ env:
   ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
   ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
   TF_VAR_location: ${{ vars.AZURE_LOCATION }}
+  TF_VAR_tf_state_resource_group_name: ${{ vars.AZURE_TF_STATE_CONTAINER_NAME }}
 
 jobs:
   terraform-plan:
