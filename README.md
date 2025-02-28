@@ -17,6 +17,8 @@ environments by creating specific branches.
 * Add role to created identity in Azure Portal
     * Services > Managed Identities > your identity > Access Control (IAM) > Add > Role assignment
     * Used Contributor role for demo purposes
+* Add Federated Credential to created identity in Azure Portal
+    * Services > Managed Identities > your identity > Settings > Federated Credentials > Add Credential
 * Copy ID info to GitHub Actions variables (Client ID, Subscription ID, Tenant ID and Object ID)
 
 Then, the repository needs to have the GitHub Actions workflow configured alongside the Terraform files.
