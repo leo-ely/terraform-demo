@@ -19,6 +19,9 @@ environments by creating specific branches.
     * Used Contributor role for demo purposes
 * Add Federated Credential to created identity in Azure Portal
     * Services > Managed Identities > your identity > Settings > Federated Credentials > Add Credential
+* Add created identity to Subscriptions (to create resources)
+    * Subscriptions > your subscription > Access Control (IAM) > Add role assignment
+    * Used Contributor role for demo purposes
 * Copy ID info to GitHub Actions variables (Client ID, Subscription ID, Tenant ID and Object ID)
 * Create Storage account in Azure Portal (to hold Terraform's file control state)
     * Add created identity to Access Control (IAM)
