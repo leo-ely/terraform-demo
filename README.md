@@ -8,7 +8,15 @@ environments by creating specific branches.
 
 ### Steps for AWS:
 
-* TODO
+* Create new user in IAM
+    * IAM > Users > Create user
+    * Added EC2 and S3 full access permissions for demo purposes
+* Create access key to created user
+* Copy access key and secret to GitHub Actions Secrets (Access key and Secret access key)
+* Create S3 storage (to hold Terraform's file control state)
+    * Amazon S3 > Create bucket
+
+Then, the repository needs to have the GitHub Actions workflow configured alongside the Terraform files.
 
 ### Steps for Azure:
 
