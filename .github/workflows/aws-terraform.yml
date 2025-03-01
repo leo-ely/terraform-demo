@@ -1,0 +1,84 @@
+name: 'Terraform AWS deployment'
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  TF_VAR_region: ${{ vars.AWS_REGION }}
+
+jobs:
+  terraform-plan:
+    name: 'Terraform Plan'
+    runs-on: ubuntu-latest
+    environment: aws-production
+    concurrency: aws-production
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./.terraform/aws
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+      - name: Create Backend configuration
+        run: |
+          echo 'bucket = "${{ vars.AWS_TF_STATE_S3_NAME }}"' >> config.s3.tfbackend
+          echo 'key = "terraform.tfstate"' >> config.s3.tfbackend
+          echo 'region = "${{ vars.AWS_REGION }}"' >> config.s3.tfbackend
+
+      - name: Terraform Init
+        run: terraform init -backend-config=config.s3.tfbackend
+      - name: Terraform Format
+        run: terraform fmt -check
+      - name: Terraform Validate
+        run: terraform validate -no-color
+
+      - name: Terraform Plan
+        run: terraform plan -input=false -out=tfplan
+      - name: Upload Terraform Plan
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfplan
+          path: ./.terraform/aws/tfplan
+
+  terraform-apply:
+    name: 'Terraform Apply'
+    needs: [ terraform-plan ]
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    environment: aws-production
+    concurrency: aws-production
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./.terraform/aws
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+      - name: Create Backend configuration
+        run: |
+          echo 'bucket = "${{ vars.AWS_TF_STATE_S3_NAME }}"' >> config.s3.tfbackend
+          echo 'key = "terraform.tfstate"' >> config.s3.tfbackend
+          echo 'region = "${{ vars.AWS_REGION }}"' >> config.s3.tfbackend
+
+      - name: Terraform Init
+        run: terraform init -backend-config=config.s3.tfbackend
+      - name: Download Terraform Plan
+        uses: actions/download-artifact@v4
+        with:
+          name: tfplan
+          path: ./.terraform/aws
+      - name: Terraform Apply
+        run: terraform apply -auto-approve tfplan
