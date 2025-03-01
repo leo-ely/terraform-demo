@@ -31,7 +31,7 @@ jobs:
         uses: hashicorp/setup-terraform@v3
       - name: Create Backend configuration
         run: |
-          echo 'bucket = "${{ vars.AWS_TF_STATE_S3_NAME }}"' >> config.s3.backend
+          echo 'bucket = "${{ vars.AWS_TF_STATE_S3_NAME }}"' >> config.s3.tfbackend
           echo 'key = "terraform.tfstate"' >> config.s3.tfbackend
           echo 'region = "${{ vars.AWS_REGION }}"' >> config.s3.tfbackend
 
@@ -69,7 +69,7 @@ jobs:
         uses: hashicorp/setup-terraform@v3
       - name: Create Backend configuration
         run: |
-          echo 'bucket = "${{ vars.AWS_TF_STATE_S3_NAME }}"' >> config.s3.backend
+          echo 'bucket = "${{ vars.AWS_TF_STATE_S3_NAME }}"' >> config.s3.tfbackend
           echo 'key = "terraform.tfstate"' >> config.s3.tfbackend
           echo 'region = "${{ vars.AWS_REGION }}"' >> config.s3.tfbackend
 
