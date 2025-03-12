@@ -41,12 +41,12 @@ jobs:
         run: terraform validate -no-color
 
       - name: Terraform Plan
-        run: terraform plan -input=false -out=tfplan
+        run: terraform plan -input=false -out=azuretfplan
       - name: Upload Terraform Plan
         uses: actions/upload-artifact@v4
         with:
-          name: tfplan
-          path: ./.terraform/azure/tfplan
+          name: azuretfplan
+          path: ./.terraform/azure/azuretfplan
 
   terraform-apply:
     name: "Terraform Apply"
@@ -77,7 +77,7 @@ jobs:
       - name: Download Terraform Plan
         uses: actions/download-artifact@v4
         with:
-          name: tfplan
+          name: azuretfplan
           path: ./.terraform/azure
       - name: Terraform Apply
-        run: terraform apply -auto-approve tfplan
+        run: terraform apply -auto-approve azuretfplan
