@@ -30,7 +30,7 @@ jobs:
       - name: Terraform Init
         run: terraform init
       - name: Terraform Apply
-        run: terraform apply
+        run: terraform apply -auto-approve
 
   terraform-plan:
     name: "Terraform Plan"
