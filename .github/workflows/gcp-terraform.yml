@@ -3,9 +3,6 @@ name: "Terraform GCP deployment"
 on:
   workflow_call:
 
-permissions:
-  contents: read
-
 env:
   GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
   TF_VAR_project_id: ${{ vars.GCP_PROJECT_ID }}
