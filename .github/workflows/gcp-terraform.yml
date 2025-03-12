@@ -21,7 +21,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: ./.terraform/gcp/modules/terraform-files
+        working-directory: ./.terraform/gcp/modules/bootstrap
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -30,7 +30,7 @@ jobs:
       - name: Terraform Init
         run: terraform init
       - name: Terraform Apply
-        run: terraform apply
+        run: terraform apply -auto-approve
 
   terraform-plan:
     name: "Terraform Plan"

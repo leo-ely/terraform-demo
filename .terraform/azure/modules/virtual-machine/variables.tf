@@ -10,11 +10,6 @@ variable "prefix" {
   type        = string
 }
 
-variable "terraform_files_resource_group_id" {
-  description = "Resource group ID that hosts Terraform files"
-  type        = string
-}
-
 variable "terraform_files_storage_account_id" {
   description = "Storage account ID that hosts Terraform files"
   type        = string

@@ -1,9 +1,9 @@
-data "google_storage_bucket" "tf_bucket" {
+data "google_storage_bucket" "terraform_bucket" {
   name = "actions-bucket-terraform-files"
 }
 
-resource "google_storage_bucket" "tf_files" {
-  count         = data.google_storage_bucket.tf_bucket.id == "" ? 1 : 0
+resource "google_storage_bucket" "terraform_files" {
+  count         = try(data.google_storage_bucket.terraform_bucket.id, null) == null ? 1 : 0
   force_destroy = true
   location      = var.location
   name          = "actions-bucket-terraform-files"
