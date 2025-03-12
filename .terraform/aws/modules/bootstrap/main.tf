@@ -1,7 +1,3 @@
-provider "aws" {
-  region = var.region
-}
-
-module "backend" {
+module "terraform_boostrap" {
   source = "../terraform-files/"
 }

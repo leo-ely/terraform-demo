@@ -13,8 +13,28 @@ env:
   TF_VAR_location: ${{ vars.AZURE_LOCATION }}
 
 jobs:
+  terraform-bootstrap:
+    name: "Terraform Bootstrap"
+    runs-on: ubuntu-latest
+    environment: azure-production
+    concurrency: azure-production
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./.terraform/azure/modules/terraform-files
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+      - name: Terraform Init
+        run: terraform init
+      - name: Terraform Apply
+        run: terraform apply
+
   terraform-plan:
     name: "Terraform Plan"
+    needs: [ terraform-bootstrap ]
     runs-on: ubuntu-latest
     environment: azure-production
     concurrency: azure-production
