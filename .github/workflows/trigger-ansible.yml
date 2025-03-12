@@ -1,0 +1,17 @@
+name: "Ansible Deployment Trigger"
+
+on:
+  workflow_call:
+
+jobs:
+  ansible-trigger:
+    name: "Trigger Ansible Actions workflow"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Ansible deployment
+        run: |
+          curl -X POST -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.ANSIBLE_REPOSITORY_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data '{"event_type": "terraform-deployed"}' \
+            https://api.github.com/repos/${{ vars.ANSIBLE_REPOSITORY }}/dispatches

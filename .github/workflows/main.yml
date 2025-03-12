@@ -1,0 +1,24 @@
+name: "Terraform Deployment"
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  aws-terraform:
+    name: "AWS Deployment"
+    uses: ./.github/workflows/aws-terraform.yml
+    secrets: inherit
+  azure-terraform:
+    name: "Azure Deployment"
+    uses: ./.github/workflows/azure-terraform.yml
+    secrets: inherit
+  gcp-terraform:
+    name: "GCP Deployment"
+    uses: ./.github/workflows/gcp-terraform.yml
+    secrets: inherit
+  ansible-deployment:
+    name: "Ansible Deployment Trigger"
+    needs: [ aws-terraform, azure-terraform, gcp-terraform ]
+    uses: ./.github/workflows/trigger-ansible.yml
+    secrets: inherit

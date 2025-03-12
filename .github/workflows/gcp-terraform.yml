@@ -1,9 +1,7 @@
-name: 'Terraform GCP deployment'
+name: "Terraform GCP deployment"
 
 on:
-  push:
-    branches: [ "main" ]
-  workflow_dispatch:
+  workflow_call:
 
 permissions:
   contents: read
@@ -15,7 +13,7 @@ env:
 
 jobs:
   terraform-plan:
-    name: 'Terraform Plan'
+    name: "Terraform Plan"
     runs-on: ubuntu-latest
     environment: gcp-production
     concurrency: gcp-production
@@ -31,7 +29,7 @@ jobs:
         uses: hashicorp/setup-terraform@v3
       - name: Create Backend configuration
         run: |
-          echo 'bucket = "${{ vars.GCP_TF_STATE_BUCKET_ID }}"' >> config.gcs.tfbackend
+          echo 'bucket = "actions-bucket-terraform-files"' >> config.gcs.tfbackend
           echo 'prefix = "terraform/state"' >> config.gcs.tfbackend
 
       - name: Terraform Init
@@ -50,9 +48,8 @@ jobs:
           path: ./.terraform/gcp/tfplan
 
   terraform-apply:
-    name: 'Terraform Apply'
+    name: "Terraform Apply"
     needs: [ terraform-plan ]
-    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     environment: gcp-production
     concurrency: gcp-production
@@ -68,7 +65,7 @@ jobs:
         uses: hashicorp/setup-terraform@v3
       - name: Create Backend configuration
         run: |
-          echo 'bucket = "${{ vars.GCP_TF_STATE_BUCKET_ID }}"' >> config.gcs.tfbackend
+          echo 'bucket = "actions-bucket-terraform-files"' >> config.gcs.tfbackend
           echo 'prefix = "terraform/state"' >> config.gcs.tfbackend
 
       - name: Terraform Init
