@@ -6,6 +6,9 @@ CI/CD pipelines.
 Integration runs with every merged pull request in the default branch, and it can be configured for different
 environments by creating specific branches.
 
+This repository also integrates with [Ansible](https://github.com/leo-ely/ansible-demo), triggering its execution with
+every merge to the default branch. A Personal Access Token (PAT) with _repo_ permissions is required for the trigger.
+
 ### Steps for AWS:
 
 * Create new user in IAM
@@ -13,8 +16,6 @@ environments by creating specific branches.
     * Added EC2 and S3 full access permissions for demo purposes
 * Create access key to created user
 * Copy access key and secret to GitHub Actions Secrets (Access key and Secret access key)
-* Create S3 storage (to hold Terraform's file control state)
-    * Amazon S3 > Create bucket
 
 Then, the repository needs to have the GitHub Actions workflow configured alongside the Terraform files.
 
@@ -22,6 +23,7 @@ Then, the repository needs to have the GitHub Actions workflow configured alongs
 
 * Create Managed Identity in Azure Portal
     * Services > Managed Identities > Add
+    * Create Resource group if needed (same group to be used in Terraform file)
 * Add role to created identity in Azure Portal
     * Services > Managed Identities > your identity > Access Control (IAM) > Add > Role assignment
     * Used Contributor role for demo purposes
@@ -31,10 +33,6 @@ Then, the repository needs to have the GitHub Actions workflow configured alongs
     * Subscriptions > your subscription > Access Control (IAM) > Add role assignment
     * Used Contributor role for demo purposes
 * Copy ID info to GitHub Actions variables (Client ID, Subscription ID, Tenant ID and Object ID)
-* Create Storage account in Azure Portal (to hold Terraform's file control state)
-    * Add created identity to Access Control (IAM)
-    * Create container for hosting Terraform's file control state
-    * Make sure that network access is properly configured in storage account
 
 Then, the repository needs to have the GitHub Actions workflow configured alongside the Terraform files.
 
@@ -45,7 +43,6 @@ Then, the repository needs to have the GitHub Actions workflow configured alongs
 * Create a service account in IAM (Editor permissions used for demo purposes)
     * Make sure that the account has proper billing permissions
 * Add a new JSON key for the new account in IAM
-* Create a bucket in Cloud Storage (to hold Terraform's file control state)
 * Configure the JSON credentials downloaded in Actions' Secrets
     * File content must not have line breaks in Secrets
 
@@ -57,8 +54,12 @@ Then, the repository needs to have the GitHub Actions workflow configured alongs
 
 All Terraform files are hosted in the **_.terraform_** folder, for easy management.
 
+Each cloud provider has its own folder and set of files.
+
 Files are set as follows:
 
+* _main.tf_ - declares the modules hosted in each folder inside _modules_
+    * resources are separated in folders for easy management
 * _providers.tf_ - declares the cloud provider, and the backend
     * backend configurations are set inside the Actions workflow
 * _variables.tf_ - declares environment variables to be used in other files
@@ -71,10 +72,6 @@ To set environment variables on Terraform, they must have the **_TF_VAR__** pref
 
 For backend environment variables file configuration, the file has the recommended naming pattern:
 _config.**\<provider-name\>**.tfbackend_
-
-For GCP, Terraform connects using the JSON credentials, added through the _GOOGLE_CREDENTIALS_ environment variable.
-
-For Azure, Terraform connects , using Azure credentials hosted in Actions' Secrets.
 
 ---
 
