@@ -8,14 +8,21 @@ jobs:
   aws-terraform:
     name: "AWS Deployment"
     uses: ./.github/workflows/aws-terraform.yml
+    permissions:
+      contents: read
     secrets: inherit
   azure-terraform:
     name: "Azure Deployment"
     uses: ./.github/workflows/azure-terraform.yml
+    permissions:
+      contents: read
+      id-token: write
     secrets: inherit
   gcp-terraform:
     name: "GCP Deployment"
     uses: ./.github/workflows/gcp-terraform.yml
+    permissions:
+      contents: read
     secrets: inherit
   ansible-deployment:
     name: "Ansible Deployment Trigger"
