@@ -1,9 +1,9 @@
-data "aws_s3_bucket" "terraform_state_bucket" {
+data "aws_s3_bucket" "tf_bucket" {
   bucket = "aws-actions-terraform-files"
 }
 
-resource "aws_s3_bucket" "terraform_files" {
-  count  = data.aws_s3_bucket.terraform_state_bucket.id == "" ? 1 : 0
+resource "aws_s3_bucket" "tf_files" {
+  count  = data.aws_s3_bucket.tf_bucket.id == "" ? 1 : 0
   bucket = "aws-actions-terraform-files"
 
   lifecycle {
@@ -11,8 +11,8 @@ resource "aws_s3_bucket" "terraform_files" {
   }
 }
 
-resource "aws_s3_bucket_versioning" "terraform_state" {
-  bucket = aws_s3_bucket.terraform_files[0].id
+resource "aws_s3_bucket_versioning" "tf_files_versioning" {
+  bucket = aws_s3_bucket.tf_files[0].id
 
   versioning_configuration {
     status = "Enabled"
