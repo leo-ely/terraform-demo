@@ -1,0 +1,35 @@
+# This workflow creates the Azure Storage Container used to host Terraform's state file
+# It should be run only once - subsequent runs will fail (since resource already exists)
+name: "Terraform Azure Bootstrap"
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+  TF_VAR_location: ${{ vars.AZURE_LOCATION }}
+
+jobs:
+  terraform-bootstrap:
+    name: "Terraform Bootstrap"
+    runs-on: ubuntu-latest
+    environment: azure-production
+    concurrency: azure-production
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./.terraform/azure/modules/bootstrap
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+      - name: Terraform Init
+        run: terraform init
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
