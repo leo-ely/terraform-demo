@@ -30,8 +30,8 @@ resource "azurerm_network_interface" "nic" {
 }
 
 resource "azurerm_linux_virtual_machine" "virtual_machine" {
-  admin_username                  = "admin"
-  admin_password                  = "@12345678"
+  admin_username                  = "test-user"
+  admin_password                  = "Test@12345"
   disable_password_authentication = false
   location                        = "eastus"
   name                            = "${var.prefix}-linux-vm"
