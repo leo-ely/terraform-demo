@@ -20,6 +20,6 @@ resource "google_storage_bucket_object" "compute_instance_inventory_file" {
   name   = "compute-instance-inventory.json"
 
   content = jsonencode({
-    compute_instances = google_compute_instance.production.*.network_interface[0].access_config[0].nat_ip
+    compute_instances = google_compute_instance.production.network_interface[0].access_config[0].nat_ip
   })
 }
