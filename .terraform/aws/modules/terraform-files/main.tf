@@ -7,7 +7,7 @@ resource "aws_s3_bucket" "terraform_files" {
 }
 
 resource "aws_s3_bucket_versioning" "terraform_files_versioning" {
-  bucket = aws_s3_bucket.terraform_files[0].id
+  bucket = aws_s3_bucket.terraform_files.id
 
   versioning_configuration {
     status = "Enabled"
