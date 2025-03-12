@@ -1,0 +1,34 @@
+# This workflow creates the S3 Bucket used to host Terraform's state file
+# It should be run only once - subsequent runs will fail (since resource already exists)
+name: "Terraform AWS Bootstrap"
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  TF_VAR_region: ${{ vars.AWS_REGION }}
+
+jobs:
+  terraform-bootstrap:
+    name: "Terraform Bootstrap"
+    runs-on: ubuntu-latest
+    environment: aws-production
+    concurrency: aws-production
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./.terraform/aws/modules/bootstrap
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+      - name: Terraform Init
+        run: terraform init
+      - name: Terraform Apply
+        run: terraform apply -auto-approve

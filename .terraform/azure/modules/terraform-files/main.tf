@@ -1,30 +1,13 @@
-resource "azurerm_resource_group" "terraform" {
-  location = var.location
-  name     = "terraform-resource-group"
-}
-
-resource "azurerm_storage_account" "terraform" {
+resource "azurerm_storage_account" "terraform_storage_account" {
   account_replication_type = "LRS"
   account_tier             = "Standard"
-  location                 = azurerm_resource_group.terraform.location
+  location                 = var.location
   name                     = "actionsterraformstorage"
-  resource_group_name      = azurerm_resource_group.terraform.name
+  resource_group_name      = "terraform-resource-group"
 }
 
-resource "azurerm_storage_container" "terraform" {
+resource "azurerm_storage_container" "terraform_storage_container" {
   container_access_type = "private"
   name                  = "terraform-files"
-  storage_account_id    = azurerm_storage_account.terraform.id
-}
-
-output "terraform_files_resource_group_id" {
-  value = azurerm_resource_group.terraform.id
-}
-
-output "terraform_files_storage_account_id" {
-  value = azurerm_storage_account.terraform.id
-}
-
-output "terraform_files_storage_container_id" {
-  value = azurerm_storage_container.terraform.id
+  storage_account_id    = azurerm_storage_account.terraform_storage_account.id
 }

@@ -10,17 +10,12 @@ variable "prefix" {
   type        = string
 }
 
-variable "terraform_files_resource_group_id" {
-  description = "Resource group ID that hosts Terraform files"
+variable "terraform_files_storage_account_name" {
+  description = "Storage account name that hosts Terraform files"
   type        = string
 }
 
-variable "terraform_files_storage_account_id" {
-  description = "Storage account ID that hosts Terraform files"
-  type        = string
-}
-
-variable "terraform_files_storage_container_id" {
-  description = "Storage container ID that hosts Terraform files"
+variable "terraform_files_storage_container_name" {
+  description = "Storage container name that hosts Terraform files"
   type        = string
 }
