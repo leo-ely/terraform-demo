@@ -1,4 +1,9 @@
-resource "google_storage_bucket" "terraform_files" {
+data "google_storage_bucket" "tf_bucket" {
+  name = "actions-bucket-terraform-files"
+}
+
+resource "google_storage_bucket" "tf_files" {
+  count         = data.google_storage_bucket.tf_bucket.id == "" ? 1 : 0
   force_destroy = true
   location      = var.location
   name          = "actions-bucket-terraform-files"
@@ -16,8 +21,4 @@ resource "google_storage_bucket" "terraform_files" {
   versioning {
     enabled = true
   }
-}
-
-output "terraform_files_bucket_id" {
-  value = google_storage_bucket.terraform_files.id
 }
