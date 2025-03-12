@@ -57,8 +57,8 @@ resource "azurerm_linux_virtual_machine" "virtual_machine" {
 
 resource "azurerm_storage_blob" "azure_vm_inventory_file" {
   name                   = "azure-vm-inventory.json"
-  storage_account_name   = var.terraform_files_storage_account_id
-  storage_container_name = var.terraform_files_storage_container_id
+  storage_account_name   = var.terraform_files_storage_account_name
+  storage_container_name = var.terraform_files_storage_container_name
   type                   = "Block"
 
   source_content = jsonencode({
