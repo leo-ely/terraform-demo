@@ -1,9 +1,7 @@
-name: 'Terraform Azure deployment'
+name: "Terraform Azure deployment"
 
 on:
-  push:
-    branches: [ "main" ]
-  workflow_dispatch:
+  workflow_call:
 
 permissions:
   contents: read
@@ -14,11 +12,10 @@ env:
   ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
   ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
   TF_VAR_location: ${{ vars.AZURE_LOCATION }}
-  TF_VAR_tf_state_resource_group_name: ${{ vars.AZURE_TF_STATE_CONTAINER_NAME }}
 
 jobs:
   terraform-plan:
-    name: 'Terraform Plan'
+    name: "Terraform Plan"
     runs-on: ubuntu-latest
     environment: azure-production
     concurrency: azure-production
@@ -34,10 +31,10 @@ jobs:
         uses: hashicorp/setup-terraform@v3
       - name: Create Backend configuration
         run: |
-          echo 'container_name = "${{ vars.AZURE_TF_STATE_CONTAINER_NAME }}"' >> config.azurerm.tfbackend
+          echo 'container_name = "terraform-files"' >> config.azurerm.tfbackend
           echo 'key = "terraform.tfstate"' >> config.azurerm.tfbackend
-          echo 'resource_group_name = "${{ vars.AZURE_TF_STATE_RG_NAME }}"' >> config.azurerm.tfbackend
-          echo 'storage_account_name = "${{ vars.AZURE_TF_STATE_SA_NAME }}"' >> config.azurerm.tfbackend
+          echo 'resource_group_name = "terraform-resource-group"' >> config.azurerm.tfbackend
+          echo 'storage_account_name = "actionsterraformstorage"' >> config.azurerm.tfbackend
           echo 'use_oidc = true' >> config.azurerm.tfbackend
 
       - name: Terraform Init
@@ -56,9 +53,8 @@ jobs:
           path: ./.terraform/azure/tfplan
 
   terraform-apply:
-    name: 'Terraform Apply'
+    name: "Terraform Apply"
     needs: [ terraform-plan ]
-    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     environment: azure-production
     concurrency: azure-production
@@ -74,10 +70,10 @@ jobs:
         uses: hashicorp/setup-terraform@v3
       - name: Create Backend configuration
         run: |
-          echo 'container_name = "${{ vars.AZURE_TF_STATE_CONTAINER_NAME }}"' >> config.azurerm.tfbackend
+          echo 'container_name = "terraform-files"' >> config.azurerm.tfbackend
           echo 'key = "terraform.tfstate"' >> config.azurerm.tfbackend
-          echo 'resource_group_name = "${{ vars.AZURE_TF_STATE_RG_NAME }}"' >> config.azurerm.tfbackend
-          echo 'storage_account_name = "${{ vars.AZURE_TF_STATE_SA_NAME }}"' >> config.azurerm.tfbackend
+          echo 'resource_group_name = "terraform-resource-group"' >> config.azurerm.tfbackend
+          echo 'storage_account_name = "actionsterraformstorage"' >> config.azurerm.tfbackend
           echo 'use_oidc = true' >> config.azurerm.tfbackend
 
       - name: Terraform Init
