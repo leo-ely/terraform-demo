@@ -1,6 +1,10 @@
+data "google_compute_zones" "compute_zones" {
+}
+
 resource "google_compute_instance" "production" {
   machine_type = "n1-standard-1"
   name         = "tfproduction-linux-vm"
+  zone         = data.google_compute_zones.compute_zones.names[0]
 
   boot_disk {
     initialize_params {

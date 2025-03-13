@@ -64,7 +64,7 @@ resource "azurerm_storage_account" "sa_boot_diagnostics" {
   account_replication_type = "LRS"
   account_tier             = "Standard"
   location                 = azurerm_resource_group.production.location
-  name                     = "diag-${var.prefix}-vm"
+  name                     = "${var.prefix}vmdiag"
   resource_group_name      = azurerm_resource_group.production.name
 }
 
