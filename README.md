@@ -40,6 +40,8 @@ Then, the repository needs to have the GitHub Actions workflow configured alongs
 * Add created identity to Subscriptions (to create resources)
     * Subscriptions > your subscription > Access Control (IAM) > Add role assignment
     * Used Contributor role for demo purposes
+    * Make sure that your subscription has the proper resource providers registered
+        * Subscriptions > your subscription > Settings > Resource providers
 * Copy ID info to GitHub Actions variables (Client ID, Subscription ID, Tenant ID and Object ID)
 
 Then, the repository needs to have the GitHub Actions workflow configured alongside the Terraform files.
