@@ -43,6 +43,7 @@ jobs:
         with:
           name: gcptfplan
           path: ./.terraform/gcp/gcptfplan
+          retention-days: 7
 
   terraform-apply:
     name: "Terraform Apply"

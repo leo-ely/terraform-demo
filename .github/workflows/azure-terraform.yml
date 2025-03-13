@@ -47,6 +47,7 @@ jobs:
         with:
           name: azuretfplan
           path: ./.terraform/azure/azuretfplan
+          retention-days: 7
 
   terraform-apply:
     name: "Terraform Apply"

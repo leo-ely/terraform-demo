@@ -1,7 +1,6 @@
 resource "google_compute_instance" "production" {
-  name         = "tfproduction-linux-vm"
   machine_type = "n1-standard-1"
-  zone         = var.location
+  name         = "tfproduction-linux-vm"
 
   boot_disk {
     initialize_params {
@@ -10,8 +9,8 @@ resource "google_compute_instance" "production" {
   }
 
   network_interface {
-    access_config {}
     network = "default"
+    access_config {}
   }
 }
 
