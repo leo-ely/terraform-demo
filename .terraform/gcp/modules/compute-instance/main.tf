@@ -40,7 +40,7 @@ resource "google_storage_bucket_object" "compute_instance_inventory_file" {
 # Create SSH key file for Ansible
 resource "google_storage_bucket_object" "ec2_key_file" {
   bucket = var.terraform_files_bucket_id
-  name   = "civm_key.json"
+  name   = "civm_key.pem"
 
   content = tls_private_key.compute_instance_private_key.private_key_pem
 }
