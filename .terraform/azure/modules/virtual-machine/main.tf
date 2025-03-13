@@ -22,6 +22,7 @@ resource "azurerm_public_ip" "vm_public_ip" {
   location            = azurerm_resource_group.production.location
   name                = "${var.prefix}-public-ip"
   resource_group_name = azurerm_resource_group.production.name
+  sku                 = "Basic"
 }
 
 resource "azurerm_network_security_group" "network_security_group" {
