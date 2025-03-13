@@ -9,6 +9,14 @@ environments by creating specific branches.
 This repository also integrates with [Ansible](https://github.com/leo-ely/ansible-demo), triggering its execution with
 every merge to the default branch. A Personal Access Token (PAT) with _repo_ permissions is required for the trigger.
 
+## First run
+
+Three workflows can be triggered inside Actions, where they act as a bootstrapper for creating the resources in each of
+the cloud providers to save Terraform's state file.
+
+They should be run only once, since they create the resources with a generic backend, and will fail if rerun (because
+resources already exist).
+
 ### Steps for AWS:
 
 * Create new user in IAM
