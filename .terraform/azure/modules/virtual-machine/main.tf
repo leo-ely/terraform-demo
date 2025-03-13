@@ -1,3 +1,8 @@
+resource "tls_private_key" "vm_private_key" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
 resource "azurerm_resource_group" "production" {
   location = var.location
   name     = "${var.prefix}-resource-group"
@@ -82,6 +87,11 @@ resource "azurerm_linux_virtual_machine" "virtual_machine" {
 
   network_interface_ids = [azurerm_network_interface.nic.id]
 
+  admin_ssh_key {
+    public_key = tls_private_key.vm_private_key.public_key_openssh
+    username   = "test-user"
+  }
+
   boot_diagnostics {
     storage_account_uri = azurerm_storage_account.sa_boot_diagnostics.primary_blob_endpoint
   }
@@ -100,6 +110,7 @@ resource "azurerm_linux_virtual_machine" "virtual_machine" {
   }
 }
 
+# Create Virtual Machines inventory file for Ansible
 resource "azurerm_storage_blob" "azure_vm_inventory_file" {
   name                   = "azure-vm-inventory.json"
   storage_account_name   = var.terraform_files_storage_account_name
@@ -109,4 +120,14 @@ resource "azurerm_storage_blob" "azure_vm_inventory_file" {
   source_content = jsonencode({
     vm_instances = azurerm_linux_virtual_machine.virtual_machine.*.public_ip_address
   })
+}
+
+# Create SSH key file for Ansible
+resource "azurerm_storage_blob" "vm_key_file" {
+  name                   = "vm_key.pem"
+  storage_account_name   = var.terraform_files_storage_account_name
+  storage_container_name = var.terraform_files_storage_container_name
+  type                   = "Block"
+
+  source_content = tls_private_key.vm_private_key.private_key_pem
 }
