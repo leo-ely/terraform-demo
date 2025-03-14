@@ -23,6 +23,8 @@ resource "aws_instance" "aws_test_instance" {
   instance_type = "t2.micro"
   key_name      = aws_key_pair.ec2_key_pair.key_name
 
+  security_groups = ["default", "ssh-security-group"]
+
   tags = {
     name = "aws-test-instance"
   }
@@ -34,7 +36,7 @@ resource "aws_s3_object" "ec2_inventory_file" {
   key    = "ec2-inventory.json"
 
   content = jsonencode({
-    ec2_instances = aws_instance.aws_test_instance.*.public_ip
+    ec2_instances = aws_instance.aws_test_instance.*.public_dns
   })
 }
 
