@@ -28,6 +28,9 @@ resource "aws_instance" "aws_test_instance" {
   tags = {
     name = "aws-test-instance"
   }
+
+  # workaround for Ansible; Python in AMI image is outdated
+  user_data = "apt update && apt upgrade -y"
 }
 
 # Create EC2 Instances inventory file for Ansible
