@@ -30,7 +30,7 @@ resource "aws_instance" "aws_test_instance" {
   }
 
   # workaround for Ansible; Python in AMI image is outdated
-  user_data = "apt update && apt upgrade -y"
+  user_data = "sudo amazon-linux-extras install python3.8"
 }
 
 # Create EC2 Instances inventory file for Ansible

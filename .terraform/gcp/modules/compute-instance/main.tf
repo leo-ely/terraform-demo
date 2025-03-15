@@ -1,6 +1,12 @@
 data "google_compute_zones" "compute_zones" {
 }
 
+data "google_compute_image" "compute_image" {
+  family      = "ubuntu-2004-lts"
+  most_recent = true
+  project     = "ubuntu-os-cloud"
+}
+
 resource "tls_private_key" "compute_instance_private_key" {
   algorithm = "RSA"
   rsa_bits  = 4096
@@ -13,7 +19,7 @@ resource "google_compute_instance" "production" {
 
   boot_disk {
     initialize_params {
-      image = "ubuntu-minimal-2210-kinetic-amd64-v20230126"
+      image = data.google_compute_image.compute_image.self_link
     }
   }
 
