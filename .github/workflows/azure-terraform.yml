@@ -16,8 +16,8 @@ jobs:
   terraform-apply:
     name: "Terraform Plan and Apply"
     runs-on: ubuntu-latest
-    environment: azure-${{ inputs.environment@L }}
-    concurrency: azure-${{ inputs.environment@L }}
+    environment: azure-${{ inputs.environment }}
+    concurrency: azure-${{ inputs.environment }}
     defaults:
       run:
         shell: bash

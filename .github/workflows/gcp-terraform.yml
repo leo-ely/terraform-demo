@@ -15,8 +15,8 @@ jobs:
   terraform-apply:
     name: "Terraform Plan and Apply"
     runs-on: ubuntu-latest
-    environment: gcp-${{ inputs.environment@L }}
-    concurrency: gcp-${{ inputs.environment@L }}
+    environment: gcp-${{ inputs.environment }}
+    concurrency: gcp-${{ inputs.environment }}
     defaults:
       run:
         shell: bash
