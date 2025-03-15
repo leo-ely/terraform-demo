@@ -3,8 +3,9 @@
 This repository acts as a demo for GitOps integration between Terraform and cloud providers, using Actions for
 CI/CD pipelines.
 
-Integration runs with every merged pull request in the default branch, and it can be configured for different
-environments by creating specific branches.
+Integration runs with a Actions workflow dispatch trigger, and it can be configured for different environments by
+creating specific branches and environments. Protection rules block deploying in production environments from any other
+branch besides the default one.
 
 This repository also integrates with [Ansible](https://github.com/leo-ely/ansible-demo), triggering its execution with
 every merge to the default branch. A Personal Access Token (PAT) with _repo_ permissions is required for the trigger.
