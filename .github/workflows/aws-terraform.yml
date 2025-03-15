@@ -2,6 +2,9 @@ name: "Terraform AWS deployment"
 
 on:
   workflow_call:
+    inputs:
+      environment:
+        type: string
 
 env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -9,11 +12,11 @@ env:
   TF_VAR_region: ${{ vars.AWS_REGION }}
 
 jobs:
-  terraform-plan:
-    name: "Terraform Plan"
+  terraform-apply:
+    name: "Terraform Plan and Apply"
     runs-on: ubuntu-latest
-    environment: aws-production
-    concurrency: aws-production
+    environment: aws-${{ inputs.environment@L }}
+    concurrency: aws-${{ inputs.environment@L }}
     defaults:
       run:
         shell: bash
@@ -39,41 +42,13 @@ jobs:
 
       - name: Terraform Plan
         run: terraform plan -input=false -out=awstfplan
+      - name: Terraform Apply
+        run: terraform apply -auto-approve awstfplan
+
       - name: Upload Terraform Plan
         uses: actions/upload-artifact@v4
         with:
           name: awstfplan
+          overwrite: true
           path: ./.terraform/aws/awstfplan
           retention-days: 7
-
-  terraform-apply:
-    name: "Terraform Apply"
-    needs: [ terraform-plan ]
-    runs-on: ubuntu-latest
-    environment: aws-production
-    concurrency: aws-production
-    defaults:
-      run:
-        shell: bash
-        working-directory: ./.terraform/aws
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-      - name: Create Backend configuration
-        run: |
-          echo 'bucket = "aws-actions-terraform-files"' >> config.s3.tfbackend
-          echo 'key = "terraform.tfstate"' >> config.s3.tfbackend
-          echo 'region = "${{ vars.AWS_REGION }}"' >> config.s3.tfbackend
-
-      - name: Terraform Init
-        run: terraform init -backend-config=config.s3.tfbackend
-      - name: Download Terraform Plan
-        uses: actions/download-artifact@v4
-        with:
-          name: awstfplan
-          path: ./.terraform/aws
-      - name: Terraform Apply
-        run: terraform apply -auto-approve awstfplan

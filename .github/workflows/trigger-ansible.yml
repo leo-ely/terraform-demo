@@ -2,6 +2,9 @@ name: "Ansible Deployment Trigger"
 
 on:
   workflow_call:
+    inputs:
+      environment:
+        type: string
 
 jobs:
   ansible-trigger:
@@ -13,5 +16,5 @@ jobs:
           curl -X POST -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer ${{ secrets.ANSIBLE_REPOSITORY_TOKEN }}" \
             -H "Content-Type: application/json" \
-            --data '{"event_type": "terraform-deployed"}' \
+            --data '{"event_type": "terraform_deployed", "client_payload": {"environment": "${{ inputs.environment }}"}}' \
             https://api.github.com/repos/${{ vars.ANSIBLE_REPOSITORY }}/dispatches

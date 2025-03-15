@@ -2,6 +2,9 @@ name: "Terraform GCP deployment"
 
 on:
   workflow_call:
+    inputs:
+      environment:
+        type: string
 
 env:
   GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
@@ -9,11 +12,11 @@ env:
   TF_VAR_region: ${{ vars.GCP_REGION }}
 
 jobs:
-  terraform-plan:
-    name: "Terraform Plan"
+  terraform-apply:
+    name: "Terraform Plan and Apply"
     runs-on: ubuntu-latest
-    environment: gcp-production
-    concurrency: gcp-production
+    environment: gcp-${{ inputs.environment@L }}
+    concurrency: gcp-${{ inputs.environment@L }}
     defaults:
       run:
         shell: bash
@@ -38,40 +41,13 @@ jobs:
 
       - name: Terraform Plan
         run: terraform plan -input=false -out=gcptfplan
+      - name: Terraform Apply
+        run: terraform apply -auto-approve gcptfplan
+
       - name: Upload Terraform Plan
         uses: actions/upload-artifact@v4
         with:
           name: gcptfplan
+          overwrite: true
           path: ./.terraform/gcp/gcptfplan
           retention-days: 7
-
-  terraform-apply:
-    name: "Terraform Apply"
-    needs: [ terraform-plan ]
-    runs-on: ubuntu-latest
-    environment: gcp-production
-    concurrency: gcp-production
-    defaults:
-      run:
-        shell: bash
-        working-directory: ./.terraform/gcp
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-      - name: Create Backend configuration
-        run: |
-          echo 'bucket = "actions-bucket-terraform-files"' >> config.gcs.tfbackend
-          echo 'prefix = "terraform/state"' >> config.gcs.tfbackend
-
-      - name: Terraform Init
-        run: terraform init -backend-config=config.gcs.tfbackend
-      - name: Download Terraform Plan
-        uses: actions/download-artifact@v4
-        with:
-          name: gcptfplan
-          path: ./.terraform/gcp
-      - name: Terraform Apply
-        run: terraform apply -auto-approve gcptfplan

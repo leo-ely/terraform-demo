@@ -1,8 +1,13 @@
 name: "Terraform Deployment"
 
 on:
-  push:
-    branches: [ "main" ]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Environment
+        type: choice
+        options:
+          - Production
 
 jobs:
   aws-terraform:
@@ -11,6 +16,8 @@ jobs:
     permissions:
       contents: read
     secrets: inherit
+    with:
+      environment: ${{ inputs.environment }}
   azure-terraform:
     name: "Azure Deployment"
     uses: ./.github/workflows/azure-terraform.yml
@@ -18,14 +25,20 @@ jobs:
       contents: read
       id-token: write
     secrets: inherit
+    with:
+      environment: ${{ inputs.environment }}
   gcp-terraform:
     name: "GCP Deployment"
     uses: ./.github/workflows/gcp-terraform.yml
     permissions:
       contents: read
     secrets: inherit
+    with:
+      environment: ${{ inputs.environment }}
   ansible-deployment:
     name: "Ansible Deployment Trigger"
     needs: [ aws-terraform, azure-terraform, gcp-terraform ]
     uses: ./.github/workflows/trigger-ansible.yml
     secrets: inherit
+    with:
+      environment: ${{ inputs.environment }}

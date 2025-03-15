@@ -2,6 +2,9 @@ name: "Terraform Azure deployment"
 
 on:
   workflow_call:
+    inputs:
+      environment:
+        type: string
 
 env:
   ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
@@ -10,11 +13,11 @@ env:
   TF_VAR_location: ${{ vars.AZURE_LOCATION }}
 
 jobs:
-  terraform-plan:
-    name: "Terraform Plan"
+  terraform-apply:
+    name: "Terraform Plan and Apply"
     runs-on: ubuntu-latest
-    environment: azure-production
-    concurrency: azure-production
+    environment: azure-${{ inputs.environment@L }}
+    concurrency: azure-${{ inputs.environment@L }}
     defaults:
       run:
         shell: bash
@@ -42,43 +45,13 @@ jobs:
 
       - name: Terraform Plan
         run: terraform plan -input=false -out=azuretfplan
+      - name: Terraform Apply
+        run: terraform apply -auto-approve azuretfplan
+
       - name: Upload Terraform Plan
         uses: actions/upload-artifact@v4
         with:
           name: azuretfplan
+          overwrite: true
           path: ./.terraform/azure/azuretfplan
           retention-days: 7
-
-  terraform-apply:
-    name: "Terraform Apply"
-    needs: [ terraform-plan ]
-    runs-on: ubuntu-latest
-    environment: azure-production
-    concurrency: azure-production
-    defaults:
-      run:
-        shell: bash
-        working-directory: ./.terraform/azure
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-      - name: Create Backend configuration
-        run: |
-          echo 'container_name = "terraform-files"' >> config.azurerm.tfbackend
-          echo 'key = "terraform.tfstate"' >> config.azurerm.tfbackend
-          echo 'resource_group_name = "terraform-resource-group"' >> config.azurerm.tfbackend
-          echo 'storage_account_name = "actionsterraformstorage"' >> config.azurerm.tfbackend
-          echo 'use_oidc = true' >> config.azurerm.tfbackend
-
-      - name: Terraform Init
-        run: terraform init -backend-config=config.azurerm.tfbackend
-      - name: Download Terraform Plan
-        uses: actions/download-artifact@v4
-        with:
-          name: azuretfplan
-          path: ./.terraform/azure
-      - name: Terraform Apply
-        run: terraform apply -auto-approve azuretfplan
