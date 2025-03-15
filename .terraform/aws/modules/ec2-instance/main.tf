@@ -1,10 +1,10 @@
-data "aws_ami" "amazon_linux" {
+data "aws_ami" "ubuntu_ami" {
   most_recent = true
   owners = ["amazon"]
 
   filter {
     name = "name"
-    values = ["amzn2-ami-hvm*"]
+    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
   }
 }
 
@@ -19,7 +19,7 @@ resource "aws_key_pair" "ec2_key_pair" {
 }
 
 resource "aws_instance" "aws_test_instance" {
-  ami           = data.aws_ami.amazon_linux.id
+  ami           = data.aws_ami.ubuntu_ami.id
   instance_type = "t2.micro"
   key_name      = aws_key_pair.ec2_key_pair.key_name
 
@@ -28,9 +28,6 @@ resource "aws_instance" "aws_test_instance" {
   tags = {
     name = "aws-test-instance"
   }
-
-  # workaround for Ansible; Python in AMI image is outdated
-  user_data = "sudo amazon-linux-extras install python3.8"
 }
 
 # Create EC2 Instances inventory file for Ansible
