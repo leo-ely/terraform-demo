@@ -30,8 +30,10 @@ jobs:
       - name: Create Backend configuration
         run: |
           echo 'bucket = "aws-actions-terraform-files"' >> config.s3.tfbackend
+          echo 'encrypt = true' >> config.s3.tfbackend
           echo 'key = "terraform.tfstate"' >> config.s3.tfbackend
           echo 'region = "${{ vars.AWS_REGION }}"' >> config.s3.tfbackend
+          echo 'use_lockfile = true'  >> config.s3.tfbackend
 
       - name: Terraform Init
         run: terraform init -backend-config=config.s3.tfbackend
