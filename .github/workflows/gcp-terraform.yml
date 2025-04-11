@@ -31,6 +31,7 @@ jobs:
         run: |
           echo 'bucket = "actions-bucket-terraform-files"' >> config.gcs.tfbackend
           echo 'prefix = "terraform/state"' >> config.gcs.tfbackend
+          echo 'use_lockfile = true' >> config.gcs.tfbackend
 
       - name: Terraform Init
         run: terraform init -backend-config=config.gcs.tfbackend
